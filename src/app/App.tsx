@@ -52,7 +52,7 @@ export default function App() {
       <footer className="relative z-10 py-4 md:py-8 px-6 md:px-12 border-t border-gray-800/50 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
           <p className="text-xs md:text-sm text-gray-400">
-            © Vidi Studios LLP
+            © Vidi Studio LLP
           </p>
           <a 
             href="mailto:hello@vidiapps.com"
