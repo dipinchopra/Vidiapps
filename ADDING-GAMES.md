@@ -15,7 +15,7 @@ Keep every game's source in its own repository. This existing `dipinchopra/Vidia
    ```
 
    For an update, replace only that game's old output, removing stale hashed assets after reviewing the target path. Keep all other games intact.
-5. Add a card to `games/index.html` with a relative link such as `./sneaker-wash/`. Give every game launch link `target="_blank" rel="noopener noreferrer"` so it opens in a new tab or window, and label that behavior accessibly. Match the website typography: `Russo One`, with a sans-serif fallback and the existing Google Fonts stylesheet. List only playable games. The current Sneaker Wash directory is a coming-soon placeholder; replace it when its build is ready.
+5. Add a card to `games/index.html` with a relative link such as `./sneaker-wash/`. Give every game launch link `target="_blank" rel="noopener noreferrer"` so it opens in a new tab or window, and label that behavior accessibly. Match the website typography: `Russo One`, with a sans-serif fallback and the existing Google Fonts stylesheet. List only playable games. Use the same compact card layout, with the game’s loading-screen background and logo in its artwork area.
 
 ## Validate and publish
 
@@ -34,3 +34,7 @@ Keep every game's source in its own repository. This existing `dipinchopra/Vidia
 ## Clean Pour
 
 Source: `https://github.com/dipinchopra/clean-pour`. Its default production build targets `/games/clean-pour/`. Its separate repository's Pages workflow explicitly overrides the base to `/clean-pour/` to preserve that standalone deployment. Updating Clean Pour on vidiapps.com requires copying a fresh default build here and pushing this repository.
+
+## Sneaker Wash
+
+Source: `https://github.com/dipinchopra/sneakerheadandshoulders`. In that separate repository run `npm ci` and `npm run build -- --base=/games/sneaker-wash/`, then copy only `dist/` contents into `games/sneaker-wash/` here. The CLI base override preserves the source repository’s portable default configuration.
