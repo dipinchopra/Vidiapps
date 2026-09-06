@@ -25,6 +25,10 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
+      - name: Include static games and custom domain
+        run: |
+          cp -R games dist/games
+          cp CNAME dist/CNAME
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
