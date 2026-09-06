@@ -10,8 +10,11 @@ export default function App() {
       </div>
 
       {/* Header */}
-      <header className="relative z-10 py-4 px-6 md:py-6 md:px-12">
+      <header className="relative z-10 py-4 px-6 md:py-6 md:px-12 flex items-center justify-between gap-4">
         <h2 className="text-xl md:text-3xl">Vidi Apps</h2>
+        <nav aria-label="Main navigation">
+          <a href="/games/" className="text-base md:text-xl border border-white/30 rounded-full px-5 py-2 hover:border-white/60 focus-visible:outline-2 focus-visible:outline-offset-4">Games</a>
+        </nav>
       </header>
 
       {/* Main Content */}

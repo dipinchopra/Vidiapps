@@ -15,7 +15,7 @@ Keep every game's source in its own repository. This existing `dipinchopra/Vidia
    ```
 
    For an update, replace only that game's old output, removing stale hashed assets after reviewing the target path. Keep all other games intact.
-5. Add a card to `games/index.html` with a relative link such as `./sneaker-wash/`. List only playable games. The current Sneaker Wash directory is a coming-soon placeholder; replace it when its build is ready.
+5. Add a card to `games/index.html` with a relative link such as `./sneaker-wash/`. Give every game launch link `target="_blank" rel="noopener noreferrer"` so it opens in a new tab or window, and label that behavior accessibly. Match the website typography: `Russo One`, with a sans-serif fallback and the existing Google Fonts stylesheet. List only playable games. The current Sneaker Wash directory is a coming-soon placeholder; replace it when its build is ready.
 
 ## Validate and publish
 
