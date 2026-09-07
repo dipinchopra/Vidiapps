@@ -19,6 +19,7 @@
 #mobileControls{position:absolute;left:22px;right:22px;bottom:max(28px,env(safe-area-inset-bottom));z-index:5;display:flex;align-items:center;justify-content:space-between;pointer-events:none}#mobileControls[hidden]{display:none}#joystick{width:108px;height:108px;border:2px solid #ffffff70;border-radius:50%;background:#161616;touch-action:none;pointer-events:auto;display:grid;place-items:center}#joystickKnob{width:44px;height:44px;border-radius:50%;background:#eee;pointer-events:none}#fireButton{width:86px;height:86px;border-radius:50%;border:2px solid #fff;background:#fff;color:#000;font:13px Mochiy,sans-serif;pointer-events:auto;touch-action:none}#fireButton.pressed{background:#ffbd83;transform:scale(.94)}.touch-layout .bottom{bottom:150px}.touch-layout .hint{font-size:9px}
 #mobileControls{z-index:7}.touch-layout #overlay{padding-bottom:160px}#fireButton:disabled{opacity:.55;color:#000}#joystick[aria-disabled="true"]{opacity:.55}
 #hud{padding:12px 14px}.top .stats{width:100%;gap:14px}.stats>div{display:flex;align-items:baseline;gap:6px}.stats>div:nth-child(2){margin-left:auto}.value{font-size:16px;margin:0}.health-row{top:62px;left:14px;right:14px;gap:12px}.health-row>div{flex:1;min-width:0}.health-row .hearts,.health-row #opponentHearts{font-size:20px;letter-spacing:2px;line-height:25px}.health-label,#opponentName{font-size:9px;margin-bottom:4px}.fighter-weapon{font-size:11px;margin-top:6px}.fighter-ammo{font-size:9px;margin-top:4px}.touch-layout .bottom,.touch-layout .menu-controls{display:none}#opponentRoster{display:none}.multiple-opponents #opponentHearts,.multiple-opponents #opponentWeapon,.multiple-opponents #opponentAmmo{display:none}.multiple-opponents #opponentRoster{display:block;max-height:78px;overflow-y:auto;pointer-events:auto;scrollbar-width:thin}.opponent-status{display:flex;justify-content:flex-end;align-items:center;gap:5px;font-size:11px;line-height:24px;white-space:nowrap}.opponent-status .small-hearts{font-size:12px;letter-spacing:0;color:#fff}.opponent-status .small-ammo{font-size:10px;color:#bbb}
+html,body,#stage{touch-action:none;overscroll-behavior:none}.touch-layout #overlay.start-screen{padding:25px}
 </style>
 </head>
 <body>
@@ -40,6 +41,9 @@
 (() => {
  'use strict';
  const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
+ // Safari can ignore viewport zoom limits; cancel page gestures while retaining both control pointers.
+ for(const event of ['gesturestart','gesturechange','gestureend'])document.addEventListener(event,e=>{if(e.cancelable)e.preventDefault();},{passive:false});
+ document.addEventListener('touchmove',e=>{if(e.touches.length>1&&e.cancelable)e.preventDefault();},{passive:false});
  const $=id=>document.getElementById(id),TAU=Math.PI*2,R=440;
 
  // Embedded effects preserve the single-file game, including file:// playback.
@@ -165,7 +169,7 @@
  // Rockets wriggle around their original heading; their tapering trail follows the actual path.
  function swimRocket(b,dt){if(b.swimAge===undefined){b.swimAge=0;b.heading=Math.atan2(b.vy,b.vx);b.speed=Math.hypot(b.vx,b.vy);b.trail=[];b.trailClock=0;}b.swimAge+=dt;const angle=b.heading+Math.sin(b.swimAge*13)*.5+Math.sin(b.swimAge*5)*.16;b.vx=Math.cos(angle)*b.speed;b.vy=Math.sin(angle)*b.speed;b.trailClock+=dt;if(b.trailClock>=1/60){b.trail.push({x:b.x,y:b.y});if(b.trail.length>22)b.trail.shift();b.trailClock=0;}}
  function drawRocketTrail(b){const trail=b.trail||[];for(let i=1;i<trail.length;i++){ctx.strokeStyle=b.enemy?'#ffb3b3':'#fff2c7';ctx.globalAlpha=.15+.55*i/trail.length;ctx.lineWidth=.7+4*i/trail.length;ctx.beginPath();ctx.moveTo(trail[i-1].x,trail[i-1].y);ctx.lineTo(trail[i].x,trail[i].y);ctx.stroke();}ctx.globalAlpha=1;}
- function render(){$('mobileControls').hidden=!mobile||splashVisible;fireButton.disabled=state!=='playing';joystick.setAttribute('aria-disabled',String(state!=='playing'));ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);
+ function render(){$('mobileControls').hidden=!mobile||splashVisible||state==='ready';$('overlay').classList.toggle('start-screen',state==='ready');fireButton.disabled=state!=='playing';joystick.setAttribute('aria-disabled',String(state!=='playing'));ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);
   ctx.save();ctx.translate(cx+rand(-shake,shake),cy+rand(-shake,shake));ctx.scale(scale,scale);
   const floor=ctx.createRadialGradient(-100,-120,0,0,0,R);floor.addColorStop(0,'#202020');floor.addColorStop(1,'#080808');circle(0,0,R,floor);ctx.strokeStyle='#fff';ctx.lineWidth=2/scale;ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.stroke();ctx.textAlign='center';
   for(const p of pickups){const y=p.y+Math.sin(time*3+p.phase)*5,color=guns[p.type].color;gunShape(p.x,y,-.35,color,1.15,p.type);ctx.font='bold 10px system-ui';ctx.fillStyle='#fff';ctx.fillText(p.type.toUpperCase(),p.x,y+34);}
